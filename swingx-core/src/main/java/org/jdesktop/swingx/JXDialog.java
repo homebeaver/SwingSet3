@@ -124,7 +124,7 @@ public class JXDialog extends JDialog {
      */
     public JXDialog(Window window, JComponent content) {
         super(window);
-        setContentPane(content);
+        setContent(content);
     }
 
     /**
