@@ -6,7 +6,7 @@ public class BasicXComboBoxEditor extends BasicComboBoxEditor {
 
     public BasicXComboBoxEditor() {
     	super();
-    	System.out.println("BasicXComboBoxEditor extends BasicComboBoxEditor ctor done, editor:"+this.getEditorComponent());
+//    	System.out.println("BasicXComboBoxEditor extends BasicComboBoxEditor ctor done, editor:"+this.getEditorComponent());
     }
 
     public static class UIResource extends BasicXComboBoxEditor

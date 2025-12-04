@@ -39,43 +39,26 @@ public class LabelProvider extends ComponentProvider<JLabel> {
      */
     public DefaultComboBoxRenderer(ComponentProvider<?> componentProvider) {
         super(componentProvider);
-		LOG.config("ctor ComponentProvider<?> componentProvider componentController="+componentController);
-//        this.cellContext = new ListCellContext();
-		this.cc = new ComboBoxContext();
+        LOG.config("ctor ComponentProvider<?>="+componentProvider+" componentController="+componentController);
+        this.context = new ComboBoxContext();
     }
 
     static Border etchedNoFocusBorder = BorderFactory.createEtchedBorder();
     Border getEmptyNoFocusBorder() {
     	return new EmptyBorder(1, 1, 1, 1);
     }
-    JXComboBox<?> cb;
-    ComboBoxContext cc;
+
+    protected JXComboBox<?> cb;
+    protected ComboBoxContext context;
+
 	@Override
 	public Component getListCellRendererComponent(JList<? extends E> list, E value, 
 			int index, boolean isSelected, boolean cellHasFocus) {
 
 //      public void installContext(JComboBox<?> component, Object value, int row, int column,
 //              boolean selected, boolean focused, boolean expanded, boolean leaf) {
-		cc.installContext(cb, value, index, -1, isSelected, cellHasFocus, false, false);
-        JComponent comp = componentController.getRendererComponent(cc);
-// DONE auskommentieren:
-//		if(isSelected) {
-//			System.out.println("DefaultComboBoxRenderer getListCellRendererComponent: list:"
-//					+list // the JList we're painting
-//	    			+"\n value:"+value+"/"+(value==null?"null":value.getClass())
-//	    			+"\n index="+index+" , isSelected="+isSelected+" , cellHasFocus="+cellHasFocus
-//	    			+"\n DefaultComboBoxRenderer this.hashCode=@"+Integer.toHexString(this.hashCode())
-//	    				);
-//	    		
-//	        LOG.info(" ListCellRendererComponent:"+comp);
-//		}
-        /* in componentController.getRendererComponent(context)
-        if (context != null) {
-            configureVisuals(context);
-            configureContent(context);
-        }
-
-         */
+		context.installContext(cb, value, index, -1, isSelected, cellHasFocus, false, false);
+        JComponent comp = componentController.getRendererComponent(context);
         comp.setBorder(index == -1 ? getEmptyNoFocusBorder() : etchedNoFocusBorder);
 //			if (isSelected) {
 //				setBackground(list.getSelectionBackground());
@@ -94,6 +77,7 @@ public class LabelProvider extends ComponentProvider<JLabel> {
 //			}
         
 // component whose paint() method will render the specified value.
+//        LOG.info("component whose paint() method will render the specified value:"+value+"\n"+comp+"\n list:"+list);
 		return comp;
 	}
 
@@ -104,7 +88,7 @@ public class LabelProvider extends ComponentProvider<JLabel> {
 		return labelProvider;
 	}
 
-    private StringValue createDefaultStringValue() {
+	protected StringValue createDefaultStringValue() {
         return MappedValues.STRING_OR_ICON_ONLY;
     }
 

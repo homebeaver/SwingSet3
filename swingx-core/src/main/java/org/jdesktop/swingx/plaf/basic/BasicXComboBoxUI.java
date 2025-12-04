@@ -99,7 +99,7 @@ public class BasicXComboBoxUI extends XComboBoxUI {
      * @return ComponentUI
      */
     public static ComponentUI createUI(JComponent c) {
-    	LOG.info("UI factory for JComponent:"+c); // c of type JXComboBox expected
+//    	LOG.info("UI factory for JComponent:"+c); // c of type JXComboBox expected
         return new BasicXComboBoxUI();
     }
 
@@ -217,7 +217,7 @@ public class BasicXComboBoxUI extends XComboBoxUI {
 
 comboBox JComboBox<?> :
  - popup            type ComboPopup interface implemented by BasicComboPopup
- -- listBox         type
+ -- listBox         type JXList<?>
  - arrowButton      type JButton
  - editor           type Component ... interface ComboBoxEditor implemented by BasicComboBoxEditor
                       in BasicComboBoxEditor EditorComponent is JTextField
@@ -233,10 +233,10 @@ comboBox JComboBox<?> :
         	xListBox.setRolloverEnabled(true);
     	} else if(listBox instanceof JYList<?>) {
     		JYList<?> yListBox = (JYList<?>)listBox;
-        	LOG.info("----+++---> UI delegate for "+c
-        			+ "\n interface ComboPopup:"+popup
-        			+ "\n popup.JList<Object>:"+yListBox
-        			);
+//        	LOG.info("----+++---> UI delegate for "+c
+//        			+ "\n interface ComboPopup:"+popup
+//        			+ "\n popup.JList<Object>:"+yListBox
+//        			);
         	yListBox.setCellRenderer(new DefaultListCellRenderer());
     	}
 
@@ -491,7 +491,7 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
     }
 
     protected ComboBoxEditor createEditor() {
-    	LOG.info("call new BasicXComboBoxEditor.UIResource()");
+//    	LOG.info("call new BasicXComboBoxEditor.UIResource()");
         return new BasicXComboBoxEditor.UIResource();
     }
 
@@ -504,7 +504,7 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
      * This method is called as part of the UI installation process {@code installUI}.
      */
     protected void installComponents() {
-    	installButton(null);
+    	installButton((Icon)null);
         if ( comboBox.isEditable() ) {
             addEditor();
         }
@@ -525,6 +525,10 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
     @Override
     public void setIsShowingPopupIcon(Icon i) {
     	isShowingPopupIcon = i;
+    }
+    public void installButton(BasicXComboBoxUI oldUI) {
+    	installButton(oldUI.icon);
+    	setIsShowingPopupIcon(oldUI.isShowingPopupIcon);
     }
     /**
      * The aggregate components which comprise the combo box are unregistered and uninitialized. 
@@ -663,7 +667,7 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
         
         // ---
         ComboBoxEditor cbcbe = comboBox.getEditor();
-        LOG.info(
+        LOG.config(
          "\n comboBox.editor:"+cbcbe.getClass() + (cbcbe instanceof ComboBoxEditor ? " (instanceof ComboBoxEditor)" : "")
         +"\n     this.editor:"+editor.getClass() + (editor instanceof ComboBoxEditor ? " (instanceof ComboBoxEditor)" : "")
         );
@@ -687,23 +691,23 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
                     if (action != null) {
                     	ActionEvent actionEvent =
                     	new ActionEvent(comboBox, ae.getID(), ae.getActionCommand(), ae.getModifiers());
-                    	LOG.info("actionEvent:"+actionEvent);
+                    	LOG.config("actionEvent:"+actionEvent);
                         action.actionPerformed(actionEvent);
                     }
                 }
             }
         });
-        if(editor instanceof ComboBoxEditor) {
-        	ComboBoxEditor cbe = (ComboBoxEditor)editor;
-        	LOG.info("xxxxxxxxxx>>"+cbe);
-//        	cbe.addActionListener(getHandler());
-//        	// macht: anEditor.setItem(anItem):
-//        	comboBox.configureEditor(cbe, comboBox.getSelectedItem());
-        } else {
-        	LOG.info("\n!!!editor:"+editor // BasicComboBoxEditor$BorderlessTextField
-        			+"\n!!!comboBox.getEditor():"+comboBox.getEditor() // BasicComboBoxEditor
-        			);
-        }
+//        if(editor instanceof ComboBoxEditor) {
+//        	ComboBoxEditor cbe = (ComboBoxEditor)editor;
+//        	LOG.info("xxxxxxxxxx>>"+cbe);
+////        	cbe.addActionListener(getHandler());
+////        	// macht: anEditor.setItem(anItem):
+////        	comboBox.configureEditor(cbe, comboBox.getSelectedItem());
+//        } else {
+//        	LOG.info("\n!!!editor:"+editor // BasicComboBoxEditor$BorderlessTextField
+//        			+"\n!!!comboBox.getEditor():"+comboBox.getEditor() // BasicComboBoxEditor
+//        			);
+//        }
 
         if(editor instanceof JComponent) {
         	JComponent jc = (JComponent)editor;
@@ -1134,6 +1138,7 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
     private boolean isDisplaySizeDirty = true;
     private Dimension cachedDisplaySize = new Dimension( 0, 0 );
     protected Dimension getDisplaySize() {
+//    	LOG.info("isDisplaySizeDirty="+isDisplaySizeDirty + " cachedDisplaySize="+cachedDisplaySize + "modelSize="+ comboBox.getModel().getSize());
         if (!isDisplaySizeDirty)  {
             return new Dimension(cachedDisplaySize);
         }
@@ -1285,7 +1290,7 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
         public void removeLayoutComponent(Component comp) {}
 
         public Dimension preferredLayoutSize(Container parent) {
-        	LOG.info("Container parent:"+parent);
+//        	LOG.info("Container parent:"+parent);
             return parent.getPreferredSize();
         }
 
@@ -1345,7 +1350,7 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
          * so that it can do type-ahead.
          */
         public void keyPressed(KeyEvent e) {
-        	LOG.info("KeyEvent "+e);
+        	LOG.config("KeyEvent "+e);
             if ( isNavigationKey(e.getKeyCode(), e.getModifiersEx()) ) {
                 lastTime = 0L;
             } else if (comboBox.isEnabled() && comboBox.getModel().getSize()!=0 &&
@@ -1601,7 +1606,7 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
         			BasicXComboBoxUI oui = (BasicXComboBoxUI)e.getOldValue();
         			BasicXComboBoxUI nui = (BasicXComboBoxUI)e.getNewValue();
         			if(oui.arrowButton!=null) {
-                		LOG.info("uninstall Button "+oui.arrowButton+" in "+oui.comboBox);
+                		LOG.config("uninstall Button "+oui.arrowButton+" in "+oui.comboBox);
             			oui.uninstallButton();
         			}
         			nui.installButton(oui.icon);
@@ -1614,12 +1619,13 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
             	 * which hides popup on AncestorEvents
             	 */
             } else {
-    			/* expected for PROP_DONT_CANCEL_POPUP
+    			/* expected for PROP_DONT_CANCEL_POPUP == doNotCancelPopup
 INFORMATION: NOT handled property highlighters
 INFORMATION: NOT handled property background
 INFORMATION: NOT handled property foreground
+INFO: NOT handled property name , border , labeledBy
     			 */
-            	LOG.info("NOT handled property "+propertyName 
+            	LOG.config("NOT handled property "+propertyName 
             		+ "\n OldValue:"+e.getOldValue() + "\n NewValue:"+e.getNewValue());
             }
 		}
