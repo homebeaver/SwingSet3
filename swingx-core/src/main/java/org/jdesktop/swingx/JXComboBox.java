@@ -105,6 +105,7 @@ public class JXComboBox<E> extends JComboBox<E> {
      * @see #getUIClassID
      * @see javax.swing.JComponent#readObject
      */
+    // public, weil in XComboBoxAddon genutzt
     public static final String uiClassID = "XComboBoxUI";
 
     /**
@@ -652,6 +653,7 @@ Es geht aber um die popup liste, und die ist in BasicXComboBoxUI.popup bzw in Ba
         	};
         	setRenderer(new DefaultListRenderer<Object>(sv));
         }
+        updateUI(); // wg. BUG 66
     }
     
     /**
