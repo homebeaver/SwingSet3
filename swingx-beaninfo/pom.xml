@@ -5,7 +5,7 @@
 		<groupId>io.github.homebeaver</groupId>
 		<artifactId>swingset3</artifactId>
 		<relativePath>../pom.xml</relativePath>
-		<version>1.7.9-SNAPSHOT</version>
+		<version>1.7.9</version>
 	</parent>
 	
   <artifactId>swingx-beaninfo</artifactId>
