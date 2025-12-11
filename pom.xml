@@ -53,18 +53,18 @@
 
 	<distributionManagement>
 	  <snapshotRepository>
-	    <id>ossrh</id>
-	    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+	    <id>central</id>
+	    <url>https://central.sonatype.com/repository/maven-snapshots</url>
 	  </snapshotRepository>
 	  <repository>
-	    <id>ossrh</id>
-	    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+	    <id>central</id>
+	    <url>https://central.sonatype.com</url>
 	  </repository>
 	</distributionManagement>
   
   <build>
   <plugins>
-	  <!-- see https://central.sonatype.org/publish/publish-maven/#distribution-management-and-authentication -->
+	  <!-- cannot continue to use the nexus-staging-maven-plugin OSSRH Sunset on June 30, 2025
 	  <plugin>
 	    <groupId>org.sonatype.plugins</groupId>
 	    <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -76,7 +76,27 @@
 	      <autoReleaseAfterClose>true</autoReleaseAfterClose>
 	    </configuration>
 	  </plugin>
-	  
+	  <plugin>
+	    <groupId>org.sonatype.central</groupId>
+	    <artifactId>central-publishing-maven-plugin</artifactId>
+	    <version>0.9.0</version> XXX diese version ist private 
+	    // es gibt open source v 1.1.1 in io.github.mavenplugins
+	    <extensions>true</extensions>
+	    <configuration>
+	      <publishingServerId>central</publishingServerId>
+	    </configuration>
+	  </plugin>
+	  -->
+	  <plugin>
+	    <groupId>io.github.mavenplugins</groupId>
+	    <artifactId>central-publishing-maven-plugin</artifactId>
+	    <version>1.1.1</version>
+	    <extensions>true</extensions>
+	    <configuration>
+	      <publishingServerId>central</publishingServerId>
+	    </configuration>
+	  </plugin>
+	   
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -158,13 +178,17 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>3.2.7</version>
+        <version>3.2.8</version>
         <executions>
           <execution>
             <phase>verify</phase>
             <goals>
               <goal>sign</goal>
             </goals>
+            <configuration>
+            <!-- keyname maps to gpg option local-user -->
+              <keyname>0x90E058F7</keyname>
+            </configuration>
           </execution>
         </executions>
       </plugin>
