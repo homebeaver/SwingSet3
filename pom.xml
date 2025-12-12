@@ -52,10 +52,15 @@
   </licenses>
 
   <distributionManagement>
+  <!-- 
+[ERROR] Failed to execute goal io.github.mavenplugins:central-publishing-maven-plugin:1.1.1:publish (injected-central-publishing) on project swingx-core 
+Failed to deploy artifacts: Could not transfer artifact io.github.homebeaver:swingx-mapviewer:jar:javadoc:1.8.0-20251212.173943-1 
+from/to central (https://central.sonatype.com/repository/maven-snapshots): status code: 403, reason phrase: Forbidden (403)
     <snapshotRepository>
       <id>central</id>
       <url>https://central.sonatype.com/repository/maven-snapshots</url>
     </snapshotRepository>
+  -->
     <repository>
       <id>central</id>
       <url>https://central.sonatype.com</url>
