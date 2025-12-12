@@ -2,44 +2,44 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
-	<groupId>io.github.homebeaver</groupId>
-	<artifactId>swingset3</artifactId>
-	<relativePath>../pom.xml</relativePath>
-	<version>1.7.9</version>
+    <groupId>io.github.homebeaver</groupId>
+    <artifactId>swingset3</artifactId>
+    <relativePath>../pom.xml</relativePath>
+    <version>1.8.0-SNAPSHOT</version>
   </parent>
-	
+
   <packaging>jar</packaging>
-  
+
   <artifactId>swingx-painters</artifactId>
   <name>SwingX Painter Support</name>
-  
+
   <dependencies>
-  	<dependency>
-  		<groupId>${project.groupId}</groupId>
-  		<artifactId>swingx-common</artifactId>
-  		<version>${project.version}</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  	
-  	<dependency>
-  		<groupId>com.jhlabs</groupId>
-  		<artifactId>filters</artifactId>
-  		<type>jar</type>
-  		<scope>test</scope>
-  	</dependency>
-  	
-  	<dependency>
-  		<groupId>${project.groupId}</groupId>
-  		<artifactId>swingx-testsupport</artifactId>
-  		<version>${project.version}</version>
-  		<type>jar</type>
-  		<scope>test</scope>
-  	</dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>swingx-common</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.jhlabs</groupId>
+      <artifactId>filters</artifactId>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>swingx-testsupport</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
         <plugin>
