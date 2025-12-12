@@ -160,8 +160,15 @@ from/to central (https://central.sonatype.com/repository/maven-snapshots): statu
               <goal>sign</goal>
             </goals>
             <configuration>
-            <!-- keyname maps to gpg option local-user -->
+            <!-- keyname maps to gpg option local-user 
+ auf github:
+[INFO] Signer 'gpg' is signing 1 file with key 0x90E058F7
+gpg: skipped "0x90E058F7": No secret key
+gpg: signing failed: No secret key
+
               <keyname>0x90E058F7</keyname>
+besser : mvn verify -Dgpg.keyname=0x90E058F7
+            -->
             </configuration>
           </execution>
         </executions>
