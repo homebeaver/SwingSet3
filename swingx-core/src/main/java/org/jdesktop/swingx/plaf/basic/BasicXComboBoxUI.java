@@ -446,10 +446,9 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
             comboBox.addKeyListener(popupKeyListener);
         }
 
-        if ( comboBox.getModel() != null ) {
-            if ( (listDataListener = createListDataListener()) != null ) {
-                comboBox.getModel().addListDataListener( listDataListener );
-            }
+        ComboBoxModel<?> model = comboBox.getModel();
+        if (model != null) {
+            LOG.config("Do not add any ListDataListener for "+model);
         }
     }
     protected void uninstallListeners() {
@@ -1491,10 +1490,10 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
 
 	class XPropertyChangeListener implements PropertyChangeListener {
 
-		@Override
-		public void propertyChange(PropertyChangeEvent e) {
+        @Override
+        public void propertyChange(PropertyChangeEvent e) {
             String propertyName = e.getPropertyName();
-        	LOG.fine(propertyName+" PropertyChangeEvent:"+e);
+            LOG.fine(propertyName+" PropertyChangeEvent:"+e);
             if (e.getSource() == editor) {
                 // If the border of the editor changes then this can effect
                 // the size of the editor which can cause the combo's size to
@@ -1507,10 +1506,10 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
                 return;
             }
             if (e.getSource() != comboBox) {
-            	LOG.warning("PropertyChangeEvent source is not JComboBox "+e.getSource());
+                LOG.warning("PropertyChangeEvent source is not JComboBox "+e.getSource());
                 return;
             }
-    		JXComboBox<?> xComboBox = (JXComboBox<?>)e.getSource();
+            JXComboBox<?> xComboBox = (JXComboBox<?>)e.getSource();
             if (propertyName == "model") {
                 ComboBoxModel<?> newModel = (ComboBoxModel<?>)e.getNewValue();
                 ComboBoxModel<?> oldModel = (ComboBoxModel<?>)e.getOldValue();
@@ -1524,7 +1523,7 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
                 }
 
                 if (editor != null) {
-                	xComboBox.configureEditor( xComboBox.getEditor(), xComboBox.getSelectedItem() );
+                    xComboBox.configureEditor(xComboBox.getEditor(), xComboBox.getSelectedItem() );
                 }
                 isMinimumSizeDirty = true;
                 isDisplaySizeDirty = true;
@@ -1532,20 +1531,20 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
                 xComboBox.repaint();
             } else if( propertyName == "rowSorter") {
                 if(listBox instanceof JXList<?>) {
-                	JXList<?> xlist = (JXList<?>)listBox;
-                	xlist.setAutoCreateRowSorter(xComboBox.hasRowSorter());
-                	RowSorter rs = xComboBox.getRowSorter();
-                	xlist.setRowSorter(rs);
+                    JXList<?> xlist = (JXList<?>)listBox;
+                    xlist.setAutoCreateRowSorter(xComboBox.hasRowSorter());
+                    RowSorter rs = xComboBox.getRowSorter();
+                    xlist.setRowSorter(rs);
                 }
             } else if (propertyName == "editor" && xComboBox.isEditable()) {
                 addEditor();
                 xComboBox.revalidate();
             } else if (propertyName == "editable") {
                 if (xComboBox.isEditable()) {
-                	xComboBox.setRequestFocusEnabled(false);
+                    xComboBox.setRequestFocusEnabled(false);
                     addEditor();
                 } else {
-                	xComboBox.setRequestFocusEnabled(true);
+                    xComboBox.setRequestFocusEnabled(true);
                     removeEditor();
                 }
                 synchronizeToolTipTextForChildren();
@@ -1573,19 +1572,19 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
                 isDisplaySizeDirty = true;
                 xComboBox.validate();
             } else if ("graphicsConfiguration".equals(propertyName)) {
-            	if(e.getOldValue()!=e.getNewValue()) {
-            		LOG.fine(propertyName+" is set to "+e.getNewValue());
-            		var newGC = (GraphicsConfiguration) e.getOldValue();
-            		var oldGC = (GraphicsConfiguration) e.getNewValue();
-            		var newTx = newGC != null ? newGC.getDefaultTransform() : null;
-            		var oldTx = oldGC != null ? oldGC.getDefaultTransform() : null;
-            		if(!Objects.equals(newTx, oldTx)) {
-            			// the scale used by "graphicsConfiguration" was changed
-                		isMinimumSizeDirty = true;
-                		isDisplaySizeDirty = true;
-                		xComboBox.validate();
-            		}
-            	}
+                if(e.getOldValue()!=e.getNewValue()) {
+                    LOG.fine(propertyName+" is set to "+e.getNewValue());
+                    var newGC = (GraphicsConfiguration) e.getOldValue();
+                    var oldGC = (GraphicsConfiguration) e.getNewValue();
+                    var newTx = newGC != null ? newGC.getDefaultTransform() : null;
+                    var oldTx = oldGC != null ? oldGC.getDefaultTransform() : null;
+                    if(!Objects.equals(newTx, oldTx)) {
+                        // the scale used by "graphicsConfiguration" was changed
+                        isMinimumSizeDirty = true;
+                        isDisplaySizeDirty = true;
+                        xComboBox.validate();
+                    }
+                }
             } else if (propertyName == JComponent.TOOL_TIP_TEXT_KEY) {
                 synchronizeToolTipTextForChildren();
             } else if (propertyName == IS_TABLE_CELL_EDITOR) {
@@ -1600,37 +1599,36 @@ INFORMATION: LookAndFeelDefaults org.jdesktop.swingx.plaf.metal.MetalXComboBoxUI
                 isDisplaySizeDirty = true;
                 xComboBox.revalidate();
             } else if (propertyName == "UI") {
-            	if(e.getOldValue()==e.getNewValue()) {
-            		LOG.config(propertyName+" is unchanged.");
-            	} else if(e.getOldValue() instanceof BasicXComboBoxUI) {
-        			BasicXComboBoxUI oui = (BasicXComboBoxUI)e.getOldValue();
-        			BasicXComboBoxUI nui = (BasicXComboBoxUI)e.getNewValue();
-        			if(oui.arrowButton!=null) {
-                		LOG.config("uninstall Button "+oui.arrowButton+" in "+oui.comboBox);
-            			oui.uninstallButton();
-        			}
-        			nui.installButton(oui.icon);
-        			nui.setIsShowingPopupIcon(oui.isShowingPopupIcon);
-            	}
+                if(e.getOldValue()==e.getNewValue()) {
+                    LOG.config(propertyName+" is unchanged.");
+                } else if(e.getOldValue() instanceof BasicXComboBoxUI) {
+                    BasicXComboBoxUI oui = (BasicXComboBoxUI)e.getOldValue();
+                    BasicXComboBoxUI nui = (BasicXComboBoxUI)e.getNewValue();
+                    if(oui.arrowButton!=null) {
+                        LOG.config("uninstall Button "+oui.arrowButton+" in "+oui.comboBox);
+                        oui.uninstallButton();
+                    }
+                    nui.installButton(oui.icon);
+                    nui.setIsShowingPopupIcon(oui.isShowingPopupIcon);
+                }
 //NOT handled properties:
             } else if (propertyName == "ancestor") {
-            	/*
-            	 * there is an AncestorListener in JComboBox
-            	 * which hides popup on AncestorEvents
-            	 */
+                /*
+                 * there is an AncestorListener in JComboBox
+                 * which hides popup on AncestorEvents
+                 */
             } else {
-    			/* expected for PROP_DONT_CANCEL_POPUP == doNotCancelPopup
+                /* expected for PROP_DONT_CANCEL_POPUP == doNotCancelPopup
 INFORMATION: NOT handled property highlighters
 INFORMATION: NOT handled property background
 INFORMATION: NOT handled property foreground
 INFO: NOT handled property name , border , labeledBy
-    			 */
-            	LOG.config("NOT handled property "+propertyName 
-            		+ "\n OldValue:"+e.getOldValue() + "\n NewValue:"+e.getNewValue());
+                 */
+                LOG.config("NOT handled property "+propertyName 
+                    + "\n OldValue:"+e.getOldValue() + "\n NewValue:"+e.getNewValue());
             }
-		}
-		
-	}
+        }
+    }
 
     // inner class copied from private javax.swing.plaf.basic.BasicComboBoxUI with modifications
     class DefaultKeySelectionManager implements JComboBox.KeySelectionManager, UIResource {

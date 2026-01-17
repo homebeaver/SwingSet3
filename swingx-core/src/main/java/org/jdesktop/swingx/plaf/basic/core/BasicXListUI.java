@@ -398,6 +398,7 @@ public class BasicXListUI extends BasicYListUI {
         // JW: here we really want the model
         ListModel<Object> model = list.getModel();
         if (model != null) {
+            LOG.config("addListDataListener "+listDataListener + "\n for model "+model);
             model.addListDataListener(listDataListener);
         }
 
