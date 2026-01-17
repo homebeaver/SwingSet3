@@ -19,6 +19,8 @@
  */
 package org.jdesktop.swingx.plaf.basic.core;
 
+import java.util.logging.Logger;
+
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
@@ -49,7 +51,10 @@ import org.jdesktop.swingx.util.Contract;
  * is completely done by this.
  * 
  */
-public final class ListSortUI { 
+public final class ListSortUI {
+
+    private static final Logger LOG = Logger.getLogger(ListSortUI.class.getName());
+
     private RowSorter<? extends ListModel<?>> sorter;
     private JXList<?> list;
 
@@ -104,11 +109,13 @@ public final class ListSortUI {
      */
     public void modelChanged(ListDataEvent e) {
         ModelChange change = new ModelChange(e);
+        // ModelChange extrahiert Informationen aus event.
+        LOG.fine(e.toString() + " for source "+e.getSource());
         prepareForChange(change);
         notifySorter(change);
         if (change.type != ListDataEvent.CONTENTS_CHANGED) {
-            // If the Sorter is unsorted we will not have received
-            // notification, force treating insert/delete as a change.
+            // If the Sorter is unsorted we will not have received notification, 
+            // force treating insert/delete as a change.
             sorterChanged = true;
         }
         processChange(change);
@@ -225,16 +232,14 @@ public final class ListSortUI {
                 break;
             }
         } else {
-            // list changed, but haven't cached rows, temporarily
-            // cache them.
+            // list changed, but haven't cached rows, temporarily cache them.
             cacheModelSelection(null);
         }
     }
 
     private void cacheModelSelection(RowSorterEvent sortEvent) {
         lastModelSelection = convertSelectionToModel(sortEvent);
-        modelLeadIndex = convertRowIndexToModel(sortEvent,
-                    getViewSelectionModel().getLeadSelectionIndex());
+        modelLeadIndex = convertRowIndexToModel(sortEvent, getViewSelectionModel().getLeadSelectionIndex());
     }
 
 //----------------------- process change, that is restore selection if needed    
@@ -408,19 +413,22 @@ public final class ListSortUI {
             } else {
                 switch (change.type) {
                 case ListDataEvent.CONTENTS_CHANGED:
-                    sorter.rowsUpdated(change.startModelIndex,
-                            change.endModelIndex);
+                    sorter.rowsUpdated(change.startModelIndex, change.endModelIndex);
                     break;
                 case ListDataEvent.INTERVAL_ADDED:
-                    sorter.rowsInserted(change.startModelIndex,
-                            change.endModelIndex);
+                    sorter.rowsInserted(change.startModelIndex, change.endModelIndex);
                     break;
                 case ListDataEvent.INTERVAL_REMOVED:
-                    sorter.rowsDeleted(change.startModelIndex,
-                            change.endModelIndex);
+                    sorter.rowsDeleted(change.startModelIndex, change.endModelIndex);
                     break;
                 }
             }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // BUG issue https://github.com/homebeaver/SwingSet/issues/69
+            LOG.info("catched "+e
+                + "\n for information on issue 69 we print the StrackTrace here:"
+                );
+            e.printStackTrace();
         } finally {
             ignoreSortChange = false;
         }
@@ -461,10 +469,13 @@ public final class ListSortUI {
     }
     /**
      * ModelChange is used when sorting to restore state, it corresponds
-     * to data from a TableModelEvent.  The values are precalculated as
-     * they are used extensively.<p>
-     * 
+     * to data from a TableModelEvent. 
+     * The values are precalculated as they are used extensively.<p>
+     */
+    /*
      * PENDING JW: this is not yet fully adapted to ListDataEvent.
+     * In javax.swing.event.ListDataEvent wird sich nichts mehr tun,
+     * Dh. ModelChange extrahiert Informationen aus event.
      */
      final static class ModelChange {
          // JW: if we received a dataChanged, there _is no_ notion 
